@@ -3,35 +3,6 @@ import pytest
 import json
 
 
-@pytest.fixture(scope="session")
-def get_access_token(timetta_token):
-    login = 'NesterovA@test-task.ru'
-    password = 'gG9NfM'
-    data = {
-        'client_id': 'external',
-        'scope': 'all offline_access',
-        'grant_type': 'password',
-        'username': login,
-        'password': password
-    }
-    response = timetta_token.get_token(data=data)
-    access_token = response.json()['access_token']
-    return access_token
-
-
-@pytest.fixture(scope="session")
-def get_headers(get_access_token):
-    headers = {
-        'Authorization': f'Bearer {get_access_token}',
-        'Content-Type': 'application/json',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Accept': '*/*',
-        'Connection': 'keep-alive',
-        'User-Agent': 'PyCharm'
-    }
-    return headers
-
-
 USER_ID = [
     '08e5b5ae-e315-4a28-a661-1562dd6d7018',
     '1197448a-5c86-412e-af84-82b9130d0510',
