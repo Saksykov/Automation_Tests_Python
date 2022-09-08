@@ -27,26 +27,36 @@ PROJECT_ID = [
 
 @pytest.mark.parametrize('user_id', USER_ID)
 def test_Get_Users(timetta_api, get_headers, user_id):
+    """
+    In test we testing request Get Users
+    """
     path = f'/Users({user_id})'
     headers = get_headers
     response = timetta_api.get(path=path, headers=headers)
     assert response.status_code == 200
-    assert response.json()['id'] == user_id
+    assert response.json().get('id') == user_id
 
 
 def test_Get_ProjectBillingTypes(timetta_api, get_headers):
+    """
+    In test we testing request Get ProjectBillingTypes
+    """
     path = '/ProjectBillingTypes'
     headers = get_headers
     response = timetta_api.get(path=path, headers=headers)
     assert response.status_code == 200
-    assert len(response.json()['value']) == 3
+    assert len(response.json().get('value')) == 3
 
 
 @pytest.mark.parametrize('billing_type_id, user_id', [
-    ('4d1a525f-3abc-4871-a64a-349c1dd3cabf', '08e5b5ae-e315-4a28-a661-1562dd6d7018'),
-    ('584dddc1-94df-43b2-b3f3-372c02fcb016', '1197448a-5c86-412e-af84-82b9130d0510')
+    (BILLING_TYPE_ID[0], USER_ID[0]),
+    (BILLING_TYPE_ID[1], USER_ID[1]),
+    (BILLING_TYPE_ID[2], USER_ID[2]),
 ])
 def test_Post_CreateProjects(timetta_api, get_headers, billing_type_id, user_id):
+    """
+    In test we testing request Post CreateProject
+    """
     path = '/Projects'
     headers = get_headers
     project_name = names.get_full_name()
@@ -58,16 +68,20 @@ def test_Post_CreateProjects(timetta_api, get_headers, billing_type_id, user_id)
     data_json = json.dumps(data)
     response = timetta_api.post(path=path, headers=headers, data=data_json)
     assert response.status_code == 201
-    assert response.json()['billingTypeId'] == billing_type_id
-    assert response.json()['managerId'] == user_id
-    assert response.json()['name'] == project_name
+    assert response.json().get('billingTypeId') == billing_type_id
+    assert response.json().get('managerId') == user_id
+    assert response.json().get('name') == project_name
 
 
 @pytest.mark.parametrize('project_id, user_id, organization_id', [
     (PROJECT_ID[0], USER_ID[0], ORGANIZATION_ID[0]),
-    (PROJECT_ID[1], USER_ID[1], ORGANIZATION_ID[1])
+    (PROJECT_ID[1], USER_ID[1], ORGANIZATION_ID[1]),
+    (PROJECT_ID[2], USER_ID[2], ORGANIZATION_ID[2])
 ])
 def test_Path_Project(timetta_api, get_headers, project_id, user_id, organization_id):
+    """
+    In test we testing request Patch Project
+    """
     path = f'/Projects({project_id})'
     headers = get_headers
     data = {
