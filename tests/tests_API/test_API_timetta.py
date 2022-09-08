@@ -2,7 +2,6 @@ import names
 import pytest
 import json
 
-
 USER_ID = [
     '08e5b5ae-e315-4a28-a661-1562dd6d7018',
     '1197448a-5c86-412e-af84-82b9130d0510',
@@ -53,7 +52,7 @@ def test_Get_ProjectBillingTypes(timetta_api, get_headers):
     (BILLING_TYPE_ID[1], USER_ID[1]),
     (BILLING_TYPE_ID[2], USER_ID[2]),
 ])
-def test_Post_CreateProjects(timetta_api, get_headers, billing_type_id, user_id):
+def test_Post_CreateProjects(timetta_api, get_headers, val_collector, billing_type_id, user_id):
     """
     In test we testing request Post CreateProject
     """
@@ -67,6 +66,7 @@ def test_Post_CreateProjects(timetta_api, get_headers, billing_type_id, user_id)
     }
     data_json = json.dumps(data)
     response = timetta_api.post(path=path, headers=headers, data=data_json)
+    val_collector.add_collector(response.json().get("id"))
     assert response.status_code == 201
     assert response.json().get('billingTypeId') == billing_type_id
     assert response.json().get('managerId') == user_id
@@ -92,3 +92,16 @@ def test_Path_Project(timetta_api, get_headers, project_id, user_id, organizatio
     response = timetta_api.patch(path=path, headers=headers, data=data_json)
     assert response.status_code == 204
     assert response.text == ''
+
+
+def test_Get_Project(timetta_api, get_headers, val_collector):
+    """
+    In test we check Creating Projects
+    """
+    headers = get_headers
+    for project_id in val_collector.get_collector():
+        path = f"/Projects({project_id})"
+        params = {'$expand': 'manager($select=id,name)', '$select': 'id,name'}
+        response = timetta_api.get(path=path, params=params, headers=headers)
+        assert response.status_code == 200
+        assert response.json().get("id") == project_id
