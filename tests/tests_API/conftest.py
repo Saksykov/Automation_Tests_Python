@@ -36,7 +36,7 @@ class ApiClient:
         return requests.delete(url=url, params=params, data=data, json=json, headers=headers, cookies=cookies)
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def timetta_api():
     return ApiClient(base_url='https://api.timetta.com/odata')
 
@@ -73,3 +73,19 @@ def get_headers(get_access_token):
         'User-Agent': 'PyCharm'
     }
     return headers
+
+
+class Collector:
+    def __init__(self, ar_list: list):
+        self.ar_list = ar_list
+
+    def add_collector(self, value):
+        self.ar_list.append(value)
+
+    def get_collector(self):
+        return self.ar_list
+
+
+@pytest.fixture(scope="session")
+def val_collector():
+    return Collector([])
