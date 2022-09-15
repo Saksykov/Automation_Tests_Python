@@ -3,29 +3,27 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 
-@pytest.fixture()
-def get_chr_options():
-    options = Options()
-    options.add_argument('chrome')
-    options.add_argument('--start-maximized')
-    options.add_argument('--window-size=1280,960')
-    return options
+class ChromeDriver:
 
+    def __init__(self, options_list: list, executable_path):
+        self.options = Options()
+        self.options_list = options_list
+        for option in self.options_list:
+            self.options.add_argument(option)
+        self.executable_path = executable_path
+        self.driver = webdriver.Chrome(executable_path=self.executable_path, options=self.options)
 
-@pytest.fixture()
-def get_chr_driver(get_chr_options):
-    executable_path = r'C:\WebDrivers\chromedriver\chromedriver.exe'
-    options = get_chr_options
-    driver = webdriver.Chrome(executable_path=executable_path, options=options)
-    return driver
+    def get_driver(self):
+        return self.driver
 
 
 @pytest.fixture(scope='function')
-def startup(request, get_chr_driver):
-    driver = get_chr_driver
-    url = 'https://timetta.com/'
+def chr_driver(request):
+    chrome_driver = ChromeDriver(options_list=['chrome', '--start-maximized', '--window-size=1280,960'],
+                                 executable_path=r'C:\WebDrivers\chromedriver\chromedriver.exe')
+    driver = chrome_driver.get_driver()
     if request.cls is not None:
         request.cls.driver = driver
-    driver.get(url=url)
+    driver.get(url='https://timetta.com/')
     yield driver
     driver.quit()
