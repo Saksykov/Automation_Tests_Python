@@ -85,6 +85,9 @@ class Collector:
     def get_collector(self):
         return self.ar_list
 
+    def clear_collector(self):
+        return self.ar_list.clear()
+
 
 @pytest.fixture(scope="session")
 def val_collector():

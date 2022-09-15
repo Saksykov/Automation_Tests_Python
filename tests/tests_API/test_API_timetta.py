@@ -22,6 +22,31 @@ PROJECT_ID = [
     '00257765-6401-4603-9a9b-6b183adfa874',
     '005bac3a-3019-445a-92ee-86eec96c6c5b'
 ]
+DEPARTMENT_ID = [
+    '0a805716-a965-45df-912a-db8a296e5293',
+    '1cfca443-cda2-4763-bd5f-a72ad3e1411b',
+    '1f5a8d44-6500-45f0-92ef-464d1480eb99'
+]
+
+
+@pytest.mark.parametrize('department_id', DEPARTMENT_ID)
+def test_Post_CreateUser(timetta_api, get_headers, department_id):
+    """
+    In test we testing request Create User
+    """
+    path = '/Users'
+    headers = get_headers
+    user_name = names.get_full_name()
+    user_email = f'{user_name}@test.mail.chu'
+    data = {'name': user_name,
+            'email': user_email,
+            'departmentId': department_id}
+    json_data = json.dumps(data)
+    response = timetta_api.post(path=path, headers=headers, data=json_data)
+    assert response.status_code == 201
+    assert response.json().get('name') == user_name
+    assert response.json().get('email') == user_email
+    assert response.json().get('departmentId') == department_id
 
 
 @pytest.mark.parametrize('user_id', USER_ID)
@@ -58,7 +83,7 @@ def test_Post_CreateProjects(timetta_api, get_headers, val_collector, billing_ty
     """
     path = '/Projects'
     headers = get_headers
-    project_name = names.get_full_name()
+    project_name = names.get_first_name(gender='female')
     data = {
         "name": f"{project_name}",
         "billingTypeId": f"{billing_type_id}",
