@@ -29,10 +29,11 @@ DEPARTMENT_ID = [
 ]
 
 
+@pytest.mark.xfail
 @pytest.mark.parametrize('department_id', DEPARTMENT_ID)
 def test_Post_CreateUser(timetta_api, get_headers, department_id):
     """
-    In test we testing request Create User
+    In test we testing request Create User (in server we can't create new user)
     """
     path = '/Users'
     headers = get_headers
