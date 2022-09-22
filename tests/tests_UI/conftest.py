@@ -17,7 +17,7 @@ class ChromeDriver:
         return self.driver
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture()
 def chr_driver(request):
     chrome_driver = ChromeDriver(options_list=['chrome', '--start-maximized', '--window-size=2112,1188'],  # use --headless without UI
                                  executable_path=r'C:\WebDrivers\chromedriver\chromedriver.exe')
