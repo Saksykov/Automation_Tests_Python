@@ -8,8 +8,7 @@ class ChromeDriver:
     def __init__(self, options_list: list):
         self.options = Options()
         self.options_list = options_list
-        for option in self.options_list:
-            self.options.add_argument(option)
+        [self.options.add_argument(option) for option in self.options_list]
         self.driver = webdriver.Chrome(options=self.options)
 
     def get_driver(self):
@@ -24,5 +23,6 @@ def chr_driver(request):
     if request.cls is not None:
         request.cls.driver = driver
     driver.get(url='https://timetta.com/')
+    driver.delete_all_cookies()
     yield driver
     driver.quit()

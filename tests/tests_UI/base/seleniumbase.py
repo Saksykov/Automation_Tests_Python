@@ -11,7 +11,8 @@ class SeleniumBase:
         self.driver = driver
         self.wait = WebDriverWait(self.driver, 15, 0.3)
 
-    def __get_selenium_by(self, find_by: str) -> dict:
+    @staticmethod
+    def __get_selenium_by(find_by: str) -> dict:
         find_by = find_by.lower()
         locating = {'css_selector': By.CSS_SELECTOR,
                     'xpath': By.XPATH,
@@ -37,3 +38,7 @@ class SeleniumBase:
 
     def are_present(self, find_by: str, locator: str, locator_name: str = None) -> List[WebElement]:
         return self.wait.until(exp_cond.presence_of_all_elements_located((self.__get_selenium_by(find_by), locator)), locator_name)
+
+    @staticmethod
+    def get_text_from_webelements(webelements_list: List[WebElement]) -> List[str]:
+        return [webelement.text for webelement in webelements_list]

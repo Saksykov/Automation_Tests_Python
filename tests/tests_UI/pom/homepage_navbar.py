@@ -12,3 +12,5 @@ class HomepageNavbar(SeleniumBase):
         self.navbar_brand = self.is_present(find_by='css_selector', locator='a.navbar-brand')
         self.navbar_logo = self.is_visible(find_by='css_selector', locator='a.navbar-brand img')
         self.nav_dropdown_items = self.are_present(find_by='css_selector', locator='ul.navbar-nav.ml-auto>li')
+        self.language_switch = self.is_present(find_by='css_selector', locator='a.d-none.text-decoration-none.lang')
+        self.sign_in = self.is_present(find_by='css_selector', locator='a.sign-in[role="button"]')
